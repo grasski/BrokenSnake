@@ -8,10 +8,9 @@ using System.Threading;
 ////https://www.youtube.com/watch?v=SGZgvMwjq2U
 namespace Snake
 {
-
     class Game {
 
-        Random randomnummer = new Random();
+        readonly Random randomnummer = new();
 
         const int windowWidth = 32;
         const int windowHeight = 16;
@@ -40,19 +39,26 @@ namespace Snake
             Random randomnummer = new Random();
             int score = 5;
             int gameover = 0;
-            Pixel hoofd = new()
+            Pixel snake = new()
             {
                 XPos = windowHeight / 2,
                 YPos = windowHeight / 2,
                 Color = ConsoleColor.Red
             };
 
+            Pixel berry = new()
+            {
+                XPos = randomnummer.Next(1, windowWidth - 2),
+                YPos = randomnummer.Next(1, windowHeight - 2),
+                Color = ConsoleColor.Cyan
+            };
+
             Direction direction = Direction.Right;
             List<int> xposlijf = new List<int>();
             List<int> yposlijf = new List<int>();
 
-            int berryx = randomnummer.Next(0, windowWidth);
-            int berryy = randomnummer.Next(0, windowHeight);
+            int berryx = randomnummer.Next(windowWidth-2, windowWidth-2);
+            int berryy = randomnummer.Next(1, 2);
 
             DateTime tijd = DateTime.Now;
             DateTime tijd2 = DateTime.Now;
@@ -60,7 +66,7 @@ namespace Snake
             while (true)
             {
                 Console.Clear();
-                if (hoofd.XPos == windowWidth - 1 || hoofd.XPos == 0 || hoofd.YPos == windowHeight - 1 || hoofd.YPos == 0)
+                if (snake.XPos == windowWidth - 1 || snake.XPos == 0 || snake.YPos == windowHeight - 1 || snake.YPos == 0)
                 {
                     gameover = 1;
                 }
@@ -85,7 +91,7 @@ namespace Snake
                     Console.Write("■");
                 }
                 Console.ForegroundColor = ConsoleColor.Green;
-                if (berryx == hoofd.XPos && berryy == hoofd.YPos)
+                if (berryx == snake.XPos && berryy == snake.YPos)
                 {
                     score++;
                     berryx = randomnummer.Next(1, windowWidth - 2);
@@ -95,7 +101,7 @@ namespace Snake
                 {
                     Console.SetCursorPosition(xposlijf[i], yposlijf[i]);
                     Console.Write("■");
-                    if (xposlijf[i] == hoofd.XPos && yposlijf[i] == hoofd.YPos)
+                    if (xposlijf[i] == snake.XPos && yposlijf[i] == snake.YPos)
                     {
                         gameover = 1;
                     }
@@ -104,8 +110,9 @@ namespace Snake
                 {
                     break;
                 }
-                Console.SetCursorPosition(hoofd.XPos, hoofd.YPos);
-                Console.ForegroundColor = hoofd.Color;
+
+                Console.SetCursorPosition(snake.XPos, snake.YPos);
+                Console.ForegroundColor = snake.Color;
                 Console.Write("■");
                 Console.SetCursorPosition(berryx, berryy);
                 Console.ForegroundColor = ConsoleColor.Cyan;
@@ -142,21 +149,21 @@ namespace Snake
                         }
                     }
                 }
-                xposlijf.Add(hoofd.XPos);
-                yposlijf.Add(hoofd.YPos);
+                xposlijf.Add(snake.XPos);
+                yposlijf.Add(snake.YPos);
                 switch (direction)
                 {
                     case Direction.Up:
-                        hoofd.YPos--;
+                        snake.YPos--;
                         break;
                     case Direction.Down:
-                        hoofd.YPos++;
+                        snake.YPos++;
                         break;
                     case Direction.Left:
-                        hoofd.XPos--;
+                        snake.XPos--;
                         break;
                     case Direction.Right:
-                        hoofd.XPos++;
+                        snake.XPos++;
                         break;
                 }
                 if (xposlijf.Count() > score)
