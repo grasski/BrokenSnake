@@ -57,9 +57,6 @@ namespace Snake
             List<int> xposlijf = new List<int>();
             List<int> yposlijf = new List<int>();
 
-            int berryx = randomnummer.Next(windowWidth-2, windowWidth-2);
-            int berryy = randomnummer.Next(1, 2);
-
             DateTime tijd = DateTime.Now;
             DateTime tijd2 = DateTime.Now;
             string buttonpressed = "no";
@@ -91,11 +88,11 @@ namespace Snake
                     Console.Write("■");
                 }
                 Console.ForegroundColor = ConsoleColor.Green;
-                if (berryx == snake.XPos && berryy == snake.YPos)
+                if (berry.XPos == snake.XPos && berry.YPos == snake.YPos)
                 {
                     score++;
-                    berryx = randomnummer.Next(1, windowWidth - 2);
-                    berryy = randomnummer.Next(1, windowHeight - 2);
+                    berry.XPos = randomnummer.Next(1, windowWidth - 2);
+                    berry.YPos = randomnummer.Next(1, windowHeight - 2);
                 }
                 for (int i = 0; i < xposlijf.Count(); i++)
                 {
@@ -111,12 +108,15 @@ namespace Snake
                     break;
                 }
 
-                Console.SetCursorPosition(snake.XPos, snake.YPos);
-                Console.ForegroundColor = snake.Color;
-                Console.Write("■");
-                Console.SetCursorPosition(berryx, berryy);
-                Console.ForegroundColor = ConsoleColor.Cyan;
-                Console.Write("■");
+                DrawPixel(snake);
+                DrawPixel(berry);
+                //Console.SetCursorPosition(snake.XPos, snake.YPos);
+                //Console.ForegroundColor = snake.Color;
+                //Console.Write("■");
+
+                //Console.SetCursorPosition(berryx, berryy);
+                //Console.ForegroundColor = ConsoleColor.Cyan;
+                //Console.Write("■");
                 tijd = DateTime.Now;
                 buttonpressed = "no";
                 while (true)
