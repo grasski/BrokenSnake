@@ -14,20 +14,30 @@ namespace Snake
 
         readonly Random randomNumber = new();
 
-        const int windowWidth = 32;
-        const int windowHeight = 16;
-        int score = 5;
+        int WindowWidth { get; set; }
+        int WindowHeight { get; set; }
+        int Score { get; set; }
 
         Snake Snake { get; set; }
         Pixel Berry { get; set; }
 
+        void SetupGame()
+        {
+            WindowWidth = 32;
+            WindowHeight = 16;
+            Console.WindowHeight = WindowHeight;
+            Console.WindowWidth = WindowWidth;
+
+            Score = 5;
+        }
         public Game()
         {
-            randomNumber = new();
+            SetupGame();
+
             Snake = new()
             {
-                XPos = windowHeight / 2,
-                YPos = windowHeight / 2,
+                XPos = WindowHeight / 2,
+                YPos = WindowHeight / 2,
                 Color = ConsoleColor.Red,
 
                 Tail = new List<Pixel>()
@@ -35,8 +45,8 @@ namespace Snake
 
             Berry = new()
             {
-                XPos = randomNumber.Next(1, windowWidth - 2),
-                YPos = randomNumber.Next(1, windowHeight - 2),
+                XPos = randomNumber.Next(1, WindowWidth - 2),
+                YPos = randomNumber.Next(1, WindowHeight - 2),
                 Color = ConsoleColor.Cyan
             };
         }
@@ -59,29 +69,29 @@ namespace Snake
         }
         void DrawBorder()
         {
-            for (int i = 0; i < windowWidth; i++)
+            for (int i = 0; i < WindowWidth; i++)
             {
                 Console.SetCursorPosition(i, 0);
                 Console.ForegroundColor = ConsoleColor.Cyan;
                 Console.Write("■");
 
-                Console.SetCursorPosition(i, windowHeight - 1);
+                Console.SetCursorPosition(i, WindowHeight - 1);
                 Console.Write("■");
             }
 
-            for (int i = 0; i < windowHeight; i++)
+            for (int i = 0; i < WindowHeight; i++)
             {
                 Console.SetCursorPosition(0, i);
                 Console.ForegroundColor = ConsoleColor.Cyan;
                 Console.Write("■");
 
-                Console.SetCursorPosition(windowWidth - 1, i);
+                Console.SetCursorPosition(WindowWidth - 1, i);
                 Console.Write("■");
             }
         }
         bool CheckGameOver(Snake snake)
         {
-            if (snake.XPos == windowWidth - 1 || snake.XPos == 0 || snake.YPos == windowHeight - 1 || snake.YPos == 0)
+            if (snake.XPos == WindowWidth - 1 || snake.XPos == 0 || snake.YPos == WindowHeight - 1 || snake.YPos == 0)
             {
                 return true;
             }
@@ -126,17 +136,14 @@ namespace Snake
         {
             if (Berry.XPos == Snake.XPos && Berry.YPos == Snake.YPos)
             {
-                score++;
-                Berry.XPos = randomNumber.Next(1, windowWidth - 2);
-                Berry.YPos = randomNumber.Next(1, windowHeight - 2);
+                Score++;
+                Berry.XPos = randomNumber.Next(1, WindowWidth - 2);
+                Berry.YPos = randomNumber.Next(1, WindowHeight - 2);
             }
         }
 
         public void StartGame()
         {
-            Console.WindowHeight = windowHeight;
-            Console.WindowWidth = windowWidth;
-
             Direction direction = Direction.Right;
             while (true)
             {
@@ -170,7 +177,7 @@ namespace Snake
                     YPos = Snake.YPos,
                     Color = ConsoleColor.Green
                 });
-                if (Snake.Tail.Count > score)
+                if (Snake.Tail.Count > Score)
                 {
                     Snake.Tail.RemoveAt(0);
                 }
@@ -191,11 +198,16 @@ namespace Snake
                         break;
                 }
             }
-            Console.SetCursorPosition(windowWidth / 5, windowHeight / 2);
-            Console.WriteLine("Game over, Score: " + score);
-            Console.SetCursorPosition(windowWidth / 5, windowHeight / 2 + 1);
+
+            DisplayGameOverMessage();
         }
 
+        void DisplayGameOverMessage()
+        {
+            Console.SetCursorPosition(WindowWidth / 5, WindowHeight / 2);
+            Console.WriteLine("Game over, Score: " + Score);
+            Console.SetCursorPosition(WindowWidth / 5, WindowHeight / 2 + 1);
+        }
 
     }
     class Snake: Pixel
